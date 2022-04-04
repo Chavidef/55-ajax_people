@@ -40,5 +40,11 @@ namespace _55_ajax_people.Controllers
             var repo = new PeopleRepository(_connectionString);
             repo.EditPerson(person);
         }
+        [HttpPost]
+        public void DeletePerson(int id)
+        {
+            var repo = new PeopleRepository(_connectionString);
+            repo.DeletePerson(id);
+        }
     }
 }

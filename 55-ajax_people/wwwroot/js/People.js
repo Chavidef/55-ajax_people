@@ -12,10 +12,10 @@
     <td>${person.lastName}</td>
     <td>${person.age}</td>
     <td>
-        <button class="btn btn-warning btn-block btn-edit" data-id="${person.Id}" data-firstname="${person.firstName}" data-lastname="${person.lastName}" data-age="${person.age}">Edit</button>
+        <button class="btn btn-warning btn-block btn-edit" data-id="${person.id}" data-firstname="${person.firstName}" data-lastname="${person.lastName}" data-age="${person.age}">Edit</button>
     </td>
     <td>
-        <button class="btn btn-danger btn-block btn-delete" data-id="${person.Id}" >Delete</button>
+        <button class="btn btn-danger btn-block btn-delete" data-id="${person.id}" >Delete</button>
     </td>
 </tr>`)
             })
@@ -37,6 +37,7 @@
     });
 
     $("#people-table").on('click', '.btn-edit', function () {
+       
         const first = $(this).data('firstname')
         const last = $(this).data('lastname')
         const age = $(this).data('age')
@@ -47,19 +48,31 @@
         $("#modalfirstName").val(first)
         $("#modallastName").val(last)
         $("#modalage").val(age)
-        $("#id").val(id)
+        $("#edit-modal").append(`<input type="hidden" data-id="${id}" name="id" />`) //messing around...
+        $("#id").data('person-id', id);
+    })
 
-        $("#edit-in-modal").on('click', function (person) {
-            console.log("heya!")
-            const firstName = $("#modalfirstName").val()
-            const lastName = $("#modallastName").val()
-            const age = $("#modalage").val()
-            const id = $("#id").val()
+    $("#edit-in-modal").on('click', function (person) {
 
-            $.post('/home/editperson', { id, firstName, lastName, age }, function () {
-                $('#edit-modal').modal('hide');
-                loadPeople()
-            })
+        const firstName = $("#modalfirstName").val()
+        const lastName = $("#modallastName").val()
+        const age = $("#modalage").val()
+        const id = $("#id").data('person-id');
+
+        console.log(id)
+
+        $.post('/home/editperson', { id, firstName, lastName, age }, function () {
+            $('#edit-modal').modal('hide');
+            loadPeople()
+        })
+    })
+
+    $("#people-table").on('click', '.btn-delete', function () {
+      
+        const id = $(this).data('id')
+
+        $.post('/home/deleteperson', { id }, function () {
+            loadPeople()
         })
     })
 
